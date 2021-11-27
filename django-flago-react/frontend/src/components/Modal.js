@@ -65,8 +65,8 @@ export default class CustomModal extends Component {
                               <Label for="expiry-date">Date de péremption</Label>
                               <Input
                                 type="text"
-                                id="expiry-date"
-                                name="expiry-date"
+                                id="expiry_date"
+                                name="expiry_date"
                                 value={this.state.activeItem.expiry}
                                 onChange={this.handleChange}
                                 placeholder="Renseigner la date de péremption"
