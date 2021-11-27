@@ -19,7 +19,7 @@ from rest_framework import routers
 from flago import views
 
 router = routers.DefaultRouter()
-router.register(r'flagos', views.FlagoView, 'flago')
+router.register(r'articles', views.ArticleView, 'article')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Flago
+from .models import Article
 
-class FlagoSerializer(serializers.ModelSerializer):
+class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Flago
-        fields = ('id', 'title', 'description', 'completed')
+        model = Article
+        fields = ('uuid', 'name', 'expiry_date', 'score', 'quantity', 'unit', 'tags')

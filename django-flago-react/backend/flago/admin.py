@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Flago
+from .models import Article
 
-class FlagoAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'completed')
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('uuid', 'name', 'expiry_date', 'score', 'quantity', 'unit', 'tags')
 
 # Register your models here.
 
-admin.site.register(Flago, FlagoAdmin)
+admin.site.register(Article, ArticleAdmin)
