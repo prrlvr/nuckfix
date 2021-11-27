@@ -32,57 +32,57 @@ export default class CustomModal extends Component {
     };
 
     render() {
-        const { toggle, onSave } = this.props;
+            const { toggle, onSave } = this.props;
 
-        return (
-            <Modal isOpen={true} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Flago Item</ModalHeader>
-            <ModalBody>
-            <Form>
-            <FormGroup>
-            <Label for="Flago-title">Title</Label>
-            <Input
-            type="text"
-            id="Flago-title"
-            name="title"
-            value={this.state.activeItem.title}
-            onChange={this.handleChange}
-            placeholder="Enter Flago Title"
-            />
-            </FormGroup>
-            <FormGroup>
-            <Label for="Flago-description">Description</Label>
-            <Input
-            type="text"
-            id="Flago-description"
-            name="description"
-            value={this.state.activeItem.description}
-            onChange={this.handleChange}
-            placeholder="Enter Flago description"
-            />
-            </FormGroup>
-            <FormGroup check>
-            <Label check>
-            <Input
-            type="checkbox"
-            name="completed"
-            checked={this.state.activeItem.completed}
-            onChange={this.handleChange}
-            />
-            Completed
-            </Label>
-            </FormGroup>
-            </Form>
-            </ModalBody>
-            <ModalFooter>
-            <Button
-            color="success"
-            onClick={() => onSave(this.state.activeItem)}
-            >
-            Save
-            </Button>
-            </ModalFooter>
-            </Modal>
-        );
-    }
+            return (
+                      <Modal isOpen={true} toggle={toggle}>
+                        <ModalHeader toggle={toggle}>Entrer un nouveau produit</ModalHeader>
+                        <ModalBody>
+                          <Form>
+                            <FormGroup>
+                              <Label for="name">Nom du produit</Label>
+                              <Input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={this.state.activeItem.name}
+                                onChange={this.handleChange}
+                                placeholder="Renseigner le nom du produit"
+                              />
+                            </FormGroup>
+                            <FormGroup>
+                              <Label for="quantity">Quantité</Label>
+                              <Input
+                                type="text"
+                                id="quantity"
+                                name="quantity"
+                                value={this.state.activeItem.quantity}
+                                onChange={this.handleChange}
+                                placeholder="Renseigner la quantité"
+                              />
+                            </FormGroup>
+                            <FormGroup>
+                              <Label for="expery-date">Date de péremption</Label>
+                              <Input
+                                type="text"
+                                id="expery-date"
+                                name="expery-date"
+                                value={this.state.activeItem.expery}
+                                onChange={this.handleChange}
+                                placeholder="Renseigner la date de péremption"
+                              />
+                            </FormGroup>
+                          </Form>
+                        </ModalBody>
+                        <ModalFooter>
+                          <Button
+                            color="success"
+                            onClick={() => onSave(this.state.activeItem)}
+                          >
+                            Save
+                          </Button>
+                        </ModalFooter>
+                      </Modal>
+                    );
+          }
 }
