@@ -62,7 +62,7 @@ export default class CustomModal extends Component {
                               />
                             </FormGroup>
                             <FormGroup>
-                              <Label for="expiry-date">Date de péremption</Label>
+                              <Label for="expiry_date">Date de péremption</Label>
                               <Input
                                 type="text"
                                 id="expiry_date"
