@@ -50,7 +50,7 @@ class App extends Component {
 
     refreshList = () => {
         axios
-            .get("/api/flagos/")
+            .get("/api/articles/")
             .then((res) => this.setState({ flagoList: res.data }))
             .catch((err) => console.log(err));
     };
@@ -64,18 +64,18 @@ class App extends Component {
 
         if (item.id) {
             axios
-                .put(`/api/flagos/${item.id}/`, item)
+                .put(`/api/articles/${item.id}/`, item)
                 .then((res) => this.refreshList());
             return;
         }
         axios
-            .post("/api/flagos/", item)
+            .post("/api/articles/", item)
             .then((res) => this.refreshList());
     };
 
     handleDelete = (item) => {
         axios
-            .delete(`/api/flagos/${item.id}/`)
+            .delete(`/api/articles/${item.id}/`)
             .then((res) => this.refreshList());
     };
 
