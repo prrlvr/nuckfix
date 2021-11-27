@@ -62,12 +62,12 @@ export default class CustomModal extends Component {
                               />
                             </FormGroup>
                             <FormGroup>
-                              <Label for="expery-date">Date de péremption</Label>
+                              <Label for="expiry-date">Date de péremption</Label>
                               <Input
                                 type="text"
-                                id="expery-date"
-                                name="expery-date"
-                                value={this.state.activeItem.expery}
+                                id="expiry-date"
+                                name="expiry-date"
+                                value={this.state.activeItem.expiry}
                                 onChange={this.handleChange}
                                 placeholder="Renseigner la date de péremption"
                               />
