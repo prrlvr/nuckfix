@@ -2,7 +2,6 @@ package articles
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -73,6 +72,42 @@ func getArticles() *sqlx.Rows {
 	return row
 }
 
+func getArticleByName(name string) *sqlx.Rows {
+	db, _ := sqlx.Open("sqlite3", "db.sqlite3")
+	defer db.Close()
+	row, err := db.Queryx("SELECT * FROM articles WHERE name = '" + name + "'")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return row
+}
+
+func deleteArticleByName(name string) {
+	db, _ := sqlx.Open("sqlite3", "db.sqlite3")
+	defer db.Close()
+
+	deleteArticle := "DELETE FROM articles WHERE name = '" + name + "'"
+
+	statement, err := db.Prepare(deleteArticle)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	statement.Exec()
+}
+
+func patchArticleByName(name string, quantity string) {
+	db, _ := sqlx.Open("sqlite3", "db.sqlite3")
+	defer db.Close()
+
+	patchArticle := "UPDATE articles SET quantity = " + (quantity) + " WHERE name = '" + name + "'"
+
+	statement, err := db.Prepare(patchArticle)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	statement.Exec()
+}
+
 func insertArticles(article Article) {
 	db, _ := sqlx.Open("sqlite3", "db.sqlite3")
 	defer db.Close()
@@ -93,21 +128,34 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		row := getArticles()
-		defer row.Close()
-		data := []Article{}
-		for row.Next() {
-			var article Article
-			err := row.StructScan(&article)
-			if err != nil {
-				log.Fatal(err)
-			}
-			data = append(data, article)
-		}
 		keys, ok := r.URL.Query()["name"]
 		if ok {
-			fmt.Fprintf(w, "name = %s\n", keys[0])
+			log.Println("Querrying name ", keys[0], ".")
+			row := getArticleByName(keys[0])
+			defer row.Close()
+			data := []Article{}
+			for row.Next() {
+				var article Article
+				err := row.StructScan(&article)
+				if err != nil {
+					log.Fatal(err)
+				}
+				data = append(data, article)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(data)
 		} else {
+			row := getArticles()
+			defer row.Close()
+			data := []Article{}
+			for row.Next() {
+				var article Article
+				err := row.StructScan(&article)
+				if err != nil {
+					log.Fatal(err)
+				}
+				data = append(data, article)
+			}
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(data)
 		}
@@ -120,9 +168,20 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 		insertArticles(article)
 	case http.MethodPatch:
-		http.Error(w, "TODO", http.StatusMethodNotAllowed)
+		keys, ok := r.URL.Query()["name"]
+		quantity, ok2 := r.URL.Query()["quantity"]
+		if !ok || !ok2 {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		} else {
+			patchArticleByName(keys[0], quantity[0])
+		}
 	case http.MethodDelete:
-		http.Error(w, "TODO", http.StatusMethodNotAllowed)
+		keys, ok := r.URL.Query()["name"]
+		if !ok {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		} else {
+			deleteArticleByName(keys[0])
+		}
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}

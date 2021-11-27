@@ -6,11 +6,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/handlers"
 	articles "flago-backend/articles"
-)
 
-var count int = 1
+	"github.com/gorilla/handlers"
+)
 
 type Error struct {
 	ErrorType   string `json:"error_type"`
