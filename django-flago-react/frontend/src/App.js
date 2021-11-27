@@ -2,56 +2,39 @@ import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
 
-const FlagoItems = [
-    {
-        id: 1,
-        title: "Go to Market",
-        description: "Buy ingredients to prepare dinner",
-        completed: true,
-    },
-    {
-        id: 2,
-        title: "Study",
-        description: "Read Algebra and History textbook for the upcoming test",
-        completed: false,
-    },
-    {
-        id: 3,
-        title: "Sammy's books",
-        description: "Go to library to return Sammy's books",
-        completed: true,
-    },
-    {
-        id: 4,
-        title: "Article",
-        description: "Write article on how to use Django with React",
-        completed: false,
-    },
-];
-
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            viewCompleted: false,
-            flagoList: [],
+            articleList: [],
+            recipesList: [],
             modal: false,
             activeItem: {
-                title: "",
-                descriptioon: "",
-                completed: false,
+                name: "",
+                expiry_date: "2021-11-17",
+                score: 81,
+                quantity: 0,
+                unit: "U",
+                tags: "Fruit",
             },
         };
     }
 
-    componentDidMount() {
+    componentDnameMount() {
         this.refreshList();
     }
 
     refreshList = () => {
         axios
             .get("/api/articles/")
-            .then((res) => this.setState({ flagoList: res.data }))
+            .then((res) => this.setState({ articleList: res.data }))
+            .catch((err) => console.log(err));
+    };
+
+    refreshRecipes = () => {
+        axios
+            .get("/api/recipes/")
+            .then((res) => this.setState({ recipesList: res.data }))
             .catch((err) => console.log(err));
     };
 
@@ -62,25 +45,24 @@ class App extends Component {
     handleSubmit = (item) => {
         this.toggle();
 
-        if (item.id) {
-            axios
-                .put(`/api/articles/${item.id}/`, item)
-                .then((res) => this.refreshList());
-            return;
-        }
+        console.log(item);
+
         axios
             .post("/api/articles/", item)
-            .then((res) => this.refreshList());
+            .then((res) => { console.log(res);
+            }, (err) => {
+                console.log(err);
+            });
     };
 
     handleDelete = (item) => {
         axios
-            .delete(`/api/articles/${item.id}/`)
+            .delete(`/api/articles/${item.name}/`)
             .then((res) => this.refreshList());
     };
 
     createItem = () => {
-        const item = { title: "", description: "", completed: false };
+        const item = { name: "", expiry_date: "2021-11-17", score: 81, quantity: 1, unit: "U", tags: "Fruit" };
 
         this.setState({ activeItem: item, modal: !this.state.modal });
     };
@@ -89,102 +71,115 @@ class App extends Component {
         this.setState({ activeItem: item, modal: !this.state.modal });
     };
 
-    displayCompleted = (status) => {
-        if (status) {
-            return this.setState({ viewCompleted: true });
-        }
-
-        return this.setState({ viewCompleted: false });
+    displayArticles = () => {
+        return this.refreshList();
+    };
+    displayRecipes = () => {
+        return this.refreshRecipes();
     };
 
     renderTabList = () => {
         return (
             <div className="nav nav-tabs">
-            <span
-            className={this.state.viewCompleted ? "nav-link active" : "nav-link"}
-            onClick={() => this.displayCompleted(true)}
-            >
-            Complete
-            </span>
-            <span
-            className={this.state.viewCompleted ? "nav-link" : "nav-link active"}
-            onClick={() => this.displayCompleted(false)}
-            >
-            Incomplete
-            </span>
+                <span
+                    onClick={() => this.displayArticles()}
+                    className={"nav-link active"}
+                >
+                    Liste des articles
+                </span>
+                <span
+                    onClick={() => this.displayRecipes()}
+                    className={"nav-link active"}
+                >
+                    Recettes Possibles
+                </span>
             </div>
         );
     };
 
     renderItems = () => {
-        const { viewCompleted } = this.state;
-        const newItems = this.state.flagoList.filter(
-            (item) => item.completed == viewCompleted
-        );
+            const newItems = this.state.articleList;
 
-        return newItems.map((item) => (
-            <li
-            key={item.id}
-            className="list-group-item d-flex justify-content-between align-items-center"
-            >
-            <span
-            className={`Flago-title mr-2 ${
-                this.state.viewCompleted ? "completed-Flago" : ""
-            }`}
-            title={item.description}
-            >
-            {item.title}
-            </span>
-            <span>
-            <button
-            className="btn btn-secondary mr-2"
-            onClick={() => this.editItem(item)}
-            >
-            Edit
-            </button>
-            <button
-            className="btn btn-danger"
-            onClick={() => this.handleDelete(item)}
-            >
-            Delete
-            </button>
-            </span>
-            </li>
-        ));
-    };
+            return newItems.map((item) => (
+                      <li
+                        key={item.id}
+                        className="list-group-item d-flex justify-content-between align-items-center"
+                      >
+                        <span
+                          className={`flago-title mr-2 ${
+                                          this.state.viewCompleted ? "completed-flago" : ""
+                                        }`}
+                          title={item.quantity}
+                        >
+                          {item.quantity}
+                        </span>
+                        <span
+                          className={`flago-title mr-2 ${
+                                          this.state.viewCompleted ? "completed-flago" : ""
+                                        }`}
+                          title={item.quantity}
+                        >
+                          {item.name}
+                        </span>
+                        <span
+                          className={`flago-title mr-2 ${
+                                          this.state.viewCompleted ? "completed-flago" : ""
+                                        }`}
+                          title={item.quantity}
+                        >
+                          {item.expiry_date}
+                        </span>
+                        <span>
+                          <button
+                            className="btn btn-secondary mr-2"
+                            onClick={() => this.editItem(item)}
+                          >
+                            Modifier l'article
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => this.handleDelete(item)}
+                          >
+                            Supprimer un article
+                          </button>
+                        </span>
+                      </li>
+                    ));
+          };
 
     render() {
-        return (
-            <main className="container">
-            <h1 className="text-white text-uppercase text-center my-4">Flago app</h1>
-            <div className="row">
-            <div className="col-md-6 col-sm-10 mx-auto p-0">
-            <div className="card p-3">
-            <div className="mb-4">
-            <button
-            className="btn btn-primary"
-            onClick={this.createItem}
-            >
-            Add task
-            </button>
-            </div>
-            {this.renderTabList()}
-            <ul className="list-group list-group-flush border-top-0">
-            {this.renderItems()}
-            </ul>
-            </div>
-            </div>
-            </div>
-            {this.state.modal ? (
-                <Modal
-                activeItem={this.state.activeItem}
-                toggle={this.toggle}
-                onSave={this.handleSubmit}
-                />
-            ) : null}
-            </main>
-        );
-    }
+            return (
+                      <main className="container">
+                        <h1 className="text-white text-uppercase text-center my-4">Flago app</h1>
+                        <div className="row">
+                          <div className="col-md-6 col-sm-10 mx-auto p-0">
+                            <div className="card p-3">
+                              <div className="mb-4">
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={this.createItem}
+                                >
+                                Ajouter un produit
+                                </button>
+                              </div>
+                              {this.renderTabList()}
+                              <ul className="list-group list-group-flush border-top-0">
+                                {this.renderItems()}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        {this.state.modal ? (
+                                      <Modal
+                                        activeItem={this.state.activeItem}
+                                        toggle={this.toggle}
+                                        onSave={this.handleSubmit}
+                                      />
+                                    ) : null}
+                      </main>
+                    );
+          }
+
 }
 
 export default App;

@@ -79,7 +79,7 @@ export default class CustomModal extends Component {
                             color="success"
                             onClick={() => onSave(this.state.activeItem)}
                           >
-                            Save
+                            Ajouter
                           </Button>
                         </ModalFooter>
                       </Modal>
